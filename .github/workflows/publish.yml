@@ -1,0 +1,29 @@
+name: Publish Images
+on:
+  release:
+    types: [published]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.4
+
+      - uses: haya14busa/action-cond@v1
+        id: latestTag
+        with:
+          cond: ${{ steps.branch-name.outputs.current_branch == 'main' }}
+          if_true: "latest"
+          if_false: "hotfix"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: test
+        if: ${{ steps.latestTag.outputs.value == 'hotfix'}}
+        run: echo ${{ steps.branch-name.outputs.current_branch }}
