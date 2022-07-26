@@ -26,4 +26,4 @@ jobs:
 
       - name: test
         if: ${{ steps.latestTag.outputs.value == 'hotfix'}}
-        run: echo ${{ steps.branch-name.outputs.current_branch }}
+        run: echo ${{ github.event.release.target_commitish }}
